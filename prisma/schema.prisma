@@ -1,0 +1,45 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  email     String      @unique
+  cnic      String      @unique
+  phone     String      @unique
+  role      Role?
+  password  String
+  verified  Boolean     @default(false)
+
+  availableRides        AvailableRide[] @relation("AvailableRides")
+  incomingRides         IncomingRide[]  @relation("IncomingRides")
+}
+
+model AvailableRide{
+  id             Int         @id @default(autoincrement())
+  destination    String
+  at             String
+  vacancy        Int
+  driverId       Int
+  driver         User        @relation("AvailableRides", fields:[driverId], references:[id])
+}
+
+model IncomingRide{
+  id             Int         @id @default(autoincrement())
+  destination    String
+  departedAt     DateTime    @default(now())
+  driverId       Int
+  driver         User        @relation("IncomingRides", fields:[driverId], references:[id])
+}
+
+enum Role{
+  CHINIOT
+  FAISALABAD
+  SHUTTLE
+  ADMIN
+}
