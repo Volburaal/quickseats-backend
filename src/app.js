@@ -17,7 +17,12 @@ app.use(cors({
   credentials: true,
   methods: "GET,POST,PUT,DELETE",
 }));
+
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  return res.status(200);
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/ride", rideRoutes);
